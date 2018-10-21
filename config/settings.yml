@@ -31,7 +31,7 @@ defaults: &defaults
   reduce_motion: false
   system_font_ui: false
   noindex: false
-  theme: 'default'
+  theme: 'bg'
   notification_emails:
     follow: false
     reblog: false

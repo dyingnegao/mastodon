@@ -1,4 +1,5 @@
 @import 'mastodon/mixins';
+@import 'bg/variables';
 @import 'mastodon/variables';
 @import 'fonts/roboto';
 @import 'fonts/roboto-mono';
@@ -24,3 +25,6 @@
 @import 'mastodon/dashboard';
 @import 'mastodon/rtl';
 @import 'mastodon/accessibility';
+
+$wallpaper: "bg/background.jpg";
+@import 'wallpaper';
