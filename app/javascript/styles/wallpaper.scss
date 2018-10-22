@@ -13,22 +13,27 @@
 body {
   &.app-body {
     background: url($wallpaper) no-repeat fixed center top;
+      background-size: cover;
   }
 
   &.about-body {
     background: url($wallpaper) no-repeat fixed center top;
+      background-size: cover;
   }
 
   &.tag-body {
     background: url($wallpaper) no-repeat fixed center top;
+      background-size: cover;
   }
 
   &.admin {
     background: url($wallpaper) no-repeat fixed center top;
+      background-size: cover;
   }
 
   &.error {
     background: url($wallpaper) no-repeat fixed center top;
+      background-size: cover;
   }
 }
 
