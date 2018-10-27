@@ -23,6 +23,9 @@ const mapStateToProps = state => ({
 @injectIntl
 export default class HomeTimeline extends React.PureComponent {
 
+
+
+
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     shouldUpdateScroll: PropTypes.func,

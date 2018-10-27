@@ -60,6 +60,7 @@ body {
     background: url($wallpaper) no-repeat fixed center top;
     background-size: cover;
   }
+  font-family: 'Koruri-Light';
 }
 
 /*** stream_entries.scss ***/
@@ -187,6 +188,17 @@ body {
 
 .account__header {
   background: rgba(lighten($ui-base-color, 4%), 0.3);
+  background-size: cover;
+  & > div {
+    background: rgba(lighten($ui-base-color, 4%), 0.0);
+    padding: 20px 10px;
+  }
+  .account__header__display-name {
+    text-shadow: 1px 1px 1px #000, -1px 1px 1px #000, 1px -1px 1px #000, -1px -1px 1px #000;
+  }
+  .account__header__username {
+    text-shadow: 1px 1px 1px #fff, -1px 1px 1px #fff, 1px -1px 1px #fff, -1px -1px 1px #fff;
+  }
 }
 
 /*** components.scss 1765行目 ***/

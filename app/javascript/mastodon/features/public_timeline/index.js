@@ -57,6 +57,10 @@ export default class PublicTimeline extends React.PureComponent {
     }
   }
 
+  handleEmbed = (status) => {
+    this.props.dispatch(openModal('EMBED', { url: status.get('url') }));
+  }
+
   handleMove = (dir) => {
     const { columnId, dispatch } = this.props;
     dispatch(moveColumn(columnId, dir));
@@ -122,6 +126,7 @@ export default class PublicTimeline extends React.PureComponent {
           onClick={this.handleHeaderClick}
           pinned={pinned}
           multiColumn={multiColumn}
+	  onEmbed={this.handleEmbed}
         >
           <ColumnSettingsContainer onChange={this.handleSettingChanged} columnId={columnId} />
         </ColumnHeader>
