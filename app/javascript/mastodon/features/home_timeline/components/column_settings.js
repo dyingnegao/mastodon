@@ -104,7 +104,7 @@ export default class ColumnSettings extends React.PureComponent {
         </div>
       </div>
 
-      <div className='detailed-status'>
+      <div className='detailed-home'>
         <a href={status.getIn(['account', 'url'])} onClick={this.handleAccountClick} className='detailed-status__display-name'>
           <div className='detailed-status__display-avatar'><Avatar account={status.get('account')} size={48} /></div>
           <DisplayName account={status.get('account')} />
