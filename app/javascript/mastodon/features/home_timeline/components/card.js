@@ -1,208 +1,164 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Immutable from 'immutable';
-import ImmutablePropTypes from 'react-immutable-proptypes';
-import punycode from 'punycode';
-import classnames from 'classnames';
+var INSTANCE = $(location).attr("host");
 
-const IDNA_PREFIX = 'xn--';
-
-const decodeIDNA = domain => {
-  return domain
-    .split('.')
-    .map(part => part.indexOf(IDNA_PREFIX) === 0 ? punycode.decode(part.slice(IDNA_PREFIX.length)) : part)
-    .join('.');
-};
-
-const getHostname = url => {
-  const parser = document.createElement('a');
-  parser.href = url;
-  return parser.hostname;
-};
-
-const trim = (text, len) => {
-  const cut = text.indexOf(' ', len);
-
-  if (cut === -1) {
-    return text;
+function card_formater(url, title, type, description, content, width, height) {
+  function escape(str) {
+    return str.replace(/[<>&"'`]/g, match => {
+      const escape = {
+        "<": "&lt;",
+        ">": "&gt;",
+        "&": "&amp;",
+        "\"": "&quot;",
+        "'": "&#39;",
+        "`": "&#x60;"
+      };
+      return escape[match];
+    });
   }
-
-  return text.substring(0, cut) + (text.length > len ? '…' : '');
-};
-
-const domParser = new DOMParser();
-
-const addAutoPlay = html => {
-  const document = domParser.parseFromString(html, 'text/html').documentElement;
-  const iframe = document.querySelector('iframe');
-
-  if (iframe) {
-    if (iframe.src.indexOf('?') !== -1) {
-      iframe.src += '&';
+  title = escape(title);
+  description = escape(description);
+  if (description.length > 50) {
+    description = description.substr(0, 50);
+  }
+  if (type == "photo") {
+    return `
+            <a href="${url}" class="status-card horizontal" target="_blank" rel="noopener">
+                <div class="status-card__image">
+                    <img src="${content}" alt="${title}" class="status-card__image-image" width="${width}" height="${height}">
+                </div>
+                <div class="status-card__content">
+                    <strong class="status-card__title" title="${title}">${title}</strong>
+                    <span class="status-card__host">${
+                      url.match(/^https?:\/\/(.*?)\//)[1]
+                    }</span>
+                </div>
+            </a>`;
+  } else if (type == "link") {
+    if (width > height) {
+      return `
+                <a href="${url}" class="status-card horizontal" target="_blank" rel="noopener">
+                    <div class="status-card__image">
+                        <img src="${content}" alt="${title}" class="status-card__image-image" width="${width}" height="${height}">
+                    </div>
+                    <div class="status-card__content">
+                        <strong class="status-card__title" title="${title}">${title}</strong>
+                        <span class="status-card__host">${
+                          url.match(/^https?:\/\/(.*?)\//)[1]
+                        }</span>
+                    </div>
+                </a>`;
     } else {
-      iframe.src += '?';
+      return `
+            <a href="${url}" class="status-card" target="_blank" rel="noopener">
+                <div class="status-card__image">
+                    <img src="${content}" alt="${title}" class="status-card__image-image" width="${width}" height="${height}">
+                </div>
+                <div class="status-card__content"><strong class="status-card__title" title="${title}">${title}</strong>
+                    <p class="status-card__description">${description}</p>
+                    <span class="status-card__host">${
+                      url.match(/^https?:\/\/(.*?)\//)[1]
+                    }</span>
+                </div>
+            </a>`;
     }
-
-    iframe.src += 'autoplay=1&auto_play=1';
-
-    // DOM parser creates html/body elements around original HTML fragment,
-    // so we need to get innerHTML out of the body and not the entire document
-    return document.querySelector('body').innerHTML;
+  } else if (type == "video") {
+    return `<div class="status-card-video">${content}</div>`;
   }
-
-  return html;
-};
-
-export default class Card extends React.PureComponent {
-
-  static propTypes = {
-    card: ImmutablePropTypes.map,
-    maxDescription: PropTypes.number,
-    onOpenMedia: PropTypes.func.isRequired,
-    compact: PropTypes.boolean,
-  };
-
-  static defaultProps = {
-    maxDescription: 50,
-    compact: false,
-  };
-
-  state = {
-    width: 280,
-    embedded: false,
-  };
-
-  componentWillReceiveProps (nextProps) {
-    if (this.props.card !== nextProps.card) {
-      this.setState({ embedded: false });
-    }
-  }
-
-  handlePhotoClick = () => {
-    const { card, onOpenMedia } = this.props;
-
-    onOpenMedia(
-      Immutable.fromJS([
-        {
-          type: 'image',
-          url: card.get('embed_url'),
-          description: card.get('title'),
-          meta: {
-            original: {
-              width: card.get('width'),
-              height: card.get('height'),
-            },
-          },
-        },
-      ]),
-      0
-    );
-  };
-
-  handleEmbedClick = () => {
-    const { card } = this.props;
-
-    if (card.get('type') === 'photo') {
-      this.handlePhotoClick();
-    } else {
-      this.setState({ embedded: true });
-    }
-  }
-
-  setRef = c => {
-    if (c) {
-      this.setState({ width: c.offsetWidth });
-    }
-  }
-
-  renderVideo () {
-    const { card }  = this.props;
-    const content   = { __html: addAutoPlay(card.get('html')) };
-    const { width } = this.state;
-    const ratio     = card.get('width') / card.get('height');
-    const height    = card.get('width') > card.get('height') ? (width / ratio) : (width * ratio);
-
-    return (
-      <div
-        ref={this.setRef}
-        className='status-card__image status-card-video'
-        dangerouslySetInnerHTML={content}
-        style={{ height }}
-      />
-    );
-  }
-
-  render () {
-    const { card, maxDescription, compact } = this.props;
-    const { width, embedded } = this.state;
-
-    if (card === null) {
-      return null;
-    }
-
-    const provider    = card.get('provider_name').length === 0 ? decodeIDNA(getHostname(card.get('url'))) : card.get('provider_name');
-    const horizontal  = (!compact && card.get('width') > card.get('height') && (card.get('width') + 100 >= width)) || card.get('type') !== 'link' || embedded;
-    const interactive = card.get('type') !== 'link';
-    const className   = classnames('status-card', { horizontal, compact, interactive });
-    const title       = interactive ? <a className='status-card__title' href={card.get('url')} title={card.get('title')} rel='noopener' target='_blank'><strong>{card.get('title')}</strong></a> : <strong className='status-card__title' title={card.get('title')}>{card.get('title')}</strong>;
-    const ratio       = compact ? 16 / 9 : card.get('width') / card.get('height');
-    const height      = card.get('width') > card.get('height') ? (width / ratio) : (width * ratio);
-
-    const description = (
-      <div className='status-card__content'>
-        {title}
-        {!(horizontal || compact) && <p className='status-card__description'>{trim(card.get('description') || '', maxDescription)}</p>}
-        <span className='status-card__host'>{provider}</span>
-      </div>
-    );
-
-    let embed     = '';
-    let thumbnail = <div style={{ backgroundImage: `url(${card.get('image')})`, width: horizontal ? width : null, height: horizontal ? height : null }} className='status-card__image-image' />;
-
-    if (interactive) {
-      if (embedded) {
-        embed = this.renderVideo();
-      } else {
-        let iconVariant = 'play';
-
-        if (card.get('type') === 'photo') {
-          iconVariant = 'search-plus';
-        }
-
-        embed = (
-          <div className='status-card__image'>
-            {thumbnail}
-
-            <div className='status-card__actions'>
-              <div>
-                <button onClick={this.handleEmbedClick}><i className={`fa fa-${iconVariant}`} /></button>
-                {horizontal && <a href={card.get('url')} target='_blank' rel='noopener'><i className='fa fa-external-link' /></a>}
-              </div>
-            </div>
-          </div>
-        );
-      }
-
-      return (
-        <div className={className} ref={this.setRef}>
-          {embed}
-          {!compact && description}
-        </div>
-      );
-    } else if (card.get('image')) {
-      embed = (
-        <div className='status-card__image'>
-          {thumbnail}
-        </div>
-      );
-    }
-
-    return (
-      <a href={card.get('url')} className={className} target='_blank' rel='noopener' ref={this.setRef}>
-        {embed}
-        {description}
-      </a>
-    );
-  }
-
+  return "";
 }
+
+(function() {
+  "use strict";
+  setTimeout(function() {
+    $(
+      "article:not(:has(.notification)) > div > .status__wrapper > .status:not(.carded)"
+    ).each(function() {
+      $(this).addClass("carded");
+      var id = $(this);
+      $.getJSON(
+        "https://" +
+          INSTANCE +
+          "/api/v1/statuses/" +
+          id.attr("data-id") +
+          "/card"
+      ).done(function(data) {
+        if (data.html != null && data.html != "") {
+          $(id)
+            .find(".status__content")
+            .after(
+              card_formater(
+                data.url,
+                data.title,
+                data.type,
+                data.description,
+                data.html,
+                data.width,
+                data.height
+              )
+            );
+        } else if (data.image != null && data.image != "") {
+          $(id)
+            .find(".status__content")
+            .after(
+              card_formater(
+                data.url,
+                data.title,
+                data.type,
+                data.description,
+                data.image,
+                data.width,
+                data.height
+              )
+            );
+        } // else {$(id).find('.status__content').after("None");}
+      });
+    });
+    new MutationObserver(function(MutationRecords, MutationObserver) {
+      $(
+        "article:not(:has(.notification)) > div > .status__wrapper > .status:not(.carded)"
+      ).each(function() {
+        $(this).addClass("carded");
+        var id = $(this);
+        $.getJSON(
+          "https://" +
+            INSTANCE +
+            "/api/v1/statuses/" +
+            id.attr("data-id") +
+            "/card"
+        ).done(function(data) {
+          if (data.html != null && data.html != "") {
+            $(id)
+              .find(".status__content")
+              .after(
+                card_formater(
+                  data.url,
+                  data.title,
+                  data.type,
+                  data.description,
+                  data.html,
+                  data.width,
+                  data.height
+                )
+              );
+          } else if (data.image != null && data.image != "") {
+            $(id)
+              .find(".status__content")
+              .after(
+                card_formater(
+                  data.url,
+                  data.title,
+                  data.type,
+                  data.description,
+                  data.image,
+                  data.width,
+                  data.height
+                )
+              );
+          } // else {$(id).find('.status__content').after("None");}
+        });
+      });
+    }).observe($(".columns-area").get(0), {
+      childList: true,
+      subtree: true
+    });
+  }, 5000);
+})();
