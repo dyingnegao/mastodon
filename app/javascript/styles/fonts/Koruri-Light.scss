@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'Koruri-Light';
+  src: local('Koruri-Light'),
+    url('../fonts/Koruri/Koruri-Light.woff2') format('woff2'),
+    url('../fonts/Koruri/Koruri-Light.woff') format('woff'),
+    url('../fonts/Koruri/Koruri-Light.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Koruri-Light';
+  src: local('Koruri-Light'),
+    url('../fonts/Koruri/Koruri-Light.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}

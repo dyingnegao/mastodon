@@ -1,3 +1,7 @@
-default: styles/application.scss
+mastodon: styles/application.scss
 contrast: styles/contrast.scss
 mastodon-light: styles/mastodon-light.scss
+bg: styles/bg.scss
+gorillaz: styles/gorillaz.scss
+tin: styles/tin.scss
+mori: styles/mori.scss

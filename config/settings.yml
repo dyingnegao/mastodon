@@ -7,7 +7,7 @@
 # For more information, see docs/Running-Mastodon/Administration-guide.md
 #
 defaults: &defaults
-  site_title: Mastodon
+  site_title: misskdon
   site_short_description: ''
   site_description: ''
   site_extended_description: ''
@@ -32,7 +32,7 @@ defaults: &defaults
   reduce_motion: false
   system_font_ui: false
   noindex: false
-  theme: 'default'
+  theme: 'bg'
   notification_emails:
     follow: false
     reblog: false
