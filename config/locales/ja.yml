@@ -10,7 +10,7 @@ ja:
     administered_by: '管理者:'
     closed_registrations: 現在このインスタンスでの新規登録は受け付けていません。しかし、他のインスタンスにアカウントを作成しても全く同じネットワークに参加することができます。
     contact: お問い合わせ先
-    contact_body_mastodon: Pawoo内からはこちら
+    contact_body_mastodon: boon.chat内からはこちら
     contact_body_twitter: Twitter内からはこちら
     contact_missing: 未設定
     contact_unavailable: N/A
@@ -493,7 +493,7 @@ ja:
       content: もうしわけありませんが、なにかが間違っています。
       title: このページは正しくありません
     '503': ただいまメンテナンスを行なっております。
-    noscript_html: Pawooのウェブアプリケーションを利用する場合はJavaScriptを有効にしてください。またはあなたのプラットフォーム向けの<a href="https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md">Mastodonネイティブアプリ</a>を探すことができます。
+    noscript_html: boon.chatのウェブアプリケーションを利用する場合はJavaScriptを有効にしてください。またはあなたのプラットフォーム向けの<a href="https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md">Mastodonネイティブアプリ</a>を探すことができます。
     top: トップに戻る
   exports:
     archive_takeout:
@@ -675,7 +675,7 @@ ja:
     oauth_registrations:
       already_registered: すでに登録されています。メールアドレスとパスワードでログイン後、設定ページよりpixivアカウント連携してください。
     signup_email: メールアドレスで登録
-    start: Pawooをはじめる
+    start: boon.chatをはじめる
     validations:
       crashed_unicode: に無効な文字が含まれています
   preferences:
