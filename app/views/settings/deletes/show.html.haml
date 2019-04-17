@@ -10,7 +10,6 @@
 
 - elsif current_user.oauth_authentications.find_by(provider: :pixiv)
   %p.hint= t('deletes.exists_oauth_authentications_html', path: settings_oauth_authentications_path)
-
 - else
   = simple_form_for @confirmation, url: settings_delete_path, method: :delete do |f|
     .warning

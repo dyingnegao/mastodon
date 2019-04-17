@@ -33,12 +33,12 @@ module Mastodon
     end
 
     def source_base_url
-      'https://github.com/pixiv/mastodon'
+      'https://github.com/dyingnegao/mastodon'
     end
 
     # specify git tag or commit hash here
     def source_tag
-      'pawoo'
+      'pawoo_boonchat_2.4.0'
     end
 
     def source_url
