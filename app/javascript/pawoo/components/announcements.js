@@ -20,7 +20,7 @@ const announcements = [
   {
     id: 7,
     icon,
-    body: 'Pawooにどんなユーザーさんがいるのか見てみよう！',
+    body: 'boon.chatにどんなユーザーさんがいるのか見てみよう！',
     link: [
       {
         reactRouter: true,
